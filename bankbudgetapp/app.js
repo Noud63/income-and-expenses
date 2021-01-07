@@ -34,26 +34,20 @@ const budgetController = (function () {
       sum = sum + current.value;
     });
     data.totals[type] = sum;
-    localStorage.setItem("DATA", JSON.stringify(data));
   };
 
-  let data;
-  if (localStorage.getItem("DATA")) {
-    data = JSON.parse(localStorage.getItem("DATA"));
-  } else {
-    data = {
-      allItems: {
-        exp: [],
-        inc: [],
-      },
-      totals: {
-        exp: 0,
-        inc: 0,
-      },
-      budget: 0,
-      percentage: -1,
-    };
-  }
+  let data = {
+    allItems: {
+      exp: [],
+      inc: [],
+    },
+    totals: {
+      exp: 0,
+      inc: 0,
+    },
+    budget: 0,
+    percentage: -1,
+  };
 
   //Public functions stored in an object
   return {
@@ -76,7 +70,6 @@ const budgetController = (function () {
       //Push it into the data structure
       data.allItems[type].push(newItem);
       // return the new element
-      localStorage.setItem("DATA", JSON.stringify(data));
       return newItem;
     },
 
@@ -91,13 +84,12 @@ const budgetController = (function () {
       if (index !== -1) {
         data.allItems[type].splice(index, 1);
       }
-      localStorage.setItem("DATA", JSON.stringify(data));
     },
 
     calculateBudget: function () {
       // calculate total income and expenses
 
-      or: calculateTotal("inc");
+      calculateTotal("inc");
       calculateTotal("exp");
 
       // claculate budget : income - expenses
@@ -109,22 +101,19 @@ const budgetController = (function () {
       } else {
         data.percentage = -1;
       }
-
-      localStorage.setItem("DATA", JSON.stringify(data));
     },
 
     calculatePercentages: function () {
       data.allItems.exp.forEach((cur) => {
         cur.calcPercentage(data.totals.inc);
       });
-      
     },
 
     getPercentages: function () {
       const allPerc = data.allItems.exp.map((cur) => {
         return cur.getPercentage();
       });
-      localStorage.setItem("DATA", JSON.stringify(data));
+
       return allPerc;
     },
 
@@ -144,7 +133,6 @@ const budgetController = (function () {
 })();
 
 //----------------------------------------- UIController --------------------------------------//
-
 const UIController = (function () {
   const DOMstrings = {
     inputType: ".add__type",
@@ -336,7 +324,6 @@ const UIController = (function () {
 })();
 
 //----------------------------------------- Global app controller ------------------------------------------//
-
 const controller = (function (budgetCtrl, UICtrl) {
   const setupEventListeners = function () {
     const DOM = UICtrl.getDOMstrings();
@@ -430,23 +417,14 @@ const controller = (function (budgetCtrl, UICtrl) {
     init: function () {
       console.log("app has started");
       UICtrl.displayMonth();
-      let DATA = JSON.parse(localStorage.getItem("DATA"));
-      console.log(DATA);
-      if (!DATA) {
+      
         UICtrl.displayBudget({
           budget: 0,
           totalInc: 0,
           totalExp: 0,
           percentage: "---",
         });
-      } else {
-        UICtrl.displayBudget({
-          budget: DATA.budget,
-          totalInc: DATA.totals.inc,
-          totalExp: DATA.totals.exp,
-          percentage: DATA.percentage,
-        });
-      }
+     
 
       setupEventListeners();
     },
@@ -455,5 +433,3 @@ const controller = (function (budgetCtrl, UICtrl) {
 
 //Only line of code outside of modules
 controller.init();
-
-
