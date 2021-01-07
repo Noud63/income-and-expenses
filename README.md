@@ -1,7 +1,7 @@
 # Income & Expenses
 Budget app.
 
-Javascript module pattern.
+Javascript module pattern.<br>
 Private data, separation of concerns, encapsulation.
 
 
