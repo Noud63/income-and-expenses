@@ -144,6 +144,7 @@ const budgetController = (function () {
 })();
 
 //----------------------------------------- UIController --------------------------------------//
+
 const UIController = (function () {
   const DOMstrings = {
     inputType: ".add__type",
@@ -335,6 +336,7 @@ const UIController = (function () {
 })();
 
 //----------------------------------------- Global app controller ------------------------------------------//
+
 const controller = (function (budgetCtrl, UICtrl) {
   const setupEventListeners = function () {
     const DOM = UICtrl.getDOMstrings();
